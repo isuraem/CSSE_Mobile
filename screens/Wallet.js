@@ -15,11 +15,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}) => {
-
-    const [selected, setSelected] = React.useState("");
+    
     const [Email, setEmail] = useState("");
-    const [Password, setPassword] = useState("");
-    const [login,setLogin] = useState("");
+    const [Password,setPassword] = useState("");
+    const [Name, setName] = useState("");
+    const [Card, setCard] = useState("");
+    const [CVC, setCVC] = useState("");
+    const [Valid,setValid] = useState("");
     const [type,setType] = useState("");
     const [loading, setLoading] = useState(false);
     
@@ -85,32 +87,31 @@ const Login = ({navigation}) => {
     return(
 
     <ScrollView style={{flex:1,backgroundColor:"#FFFFFF"}} showsVerticalScrollIndicator ={false}>
-    <ImageBackground source = { require('../assets/background2.jpg')}
+    <ImageBackground source = { require('../assets/debit.jpg')}
     style = {{
         height: Dimensions.get('window').height/2.5,
 
     }}> 
-    <View style= {{flex:1,justifyContent:'center',alignItems:'center'}}>
-      <Image source= {require('../assets/location.png')}/>
-        <Text style = {styles.brandViewText}>Trip Me </Text>
-    </View>
-        
+   
     </ImageBackground>
     <View style = {styles.bottomView}>
         <View style = {{ padding:25}}>
-            <Text style = {{color:'#0047AB',fontSize:30,fontWeight:"bold"}}>Welcome</Text>
-                <Text style = {{fontSize:20}}>Don't have an account ?
-                    <Text style = {{fontSize:20,color:'red',marginLeft:10}} onPress = { () => navigation.navigate("Signup")}>
+            <Text style = {{color:'#0047AB',fontSize:30,fontWeight:"bold"}}>Make Easy</Text>
+                <Text style = {{fontSize:20}}>Add More Credits
+                    <Text style = {{fontSize:20,color:'red',marginLeft:10}} >
                     { '  '}
-                        Register 
+                        :) 
                     </Text>
             </Text>
            <View style= {{marginTop:30}}>
-                
-                   <UserInput  name="Email" value={Email} setValue={setEmail}  />
-                   <UserInput  name="Password" value={Password} setValue={setPassword}  />
-                   <View style= {{marginHorizontal:30,marginTop:15}}>
-                   <SelectList setSelected={setSelected} data={data} onSelect={() => storetype()}/>
+                <View style = {{flex:1,flexDirection:'colomn'}}>
+                   <UserInput  name="Name" value={Email} setValue={setName}  />
+                   <UserInput  name="Card" value={Password} setValue={setCard}  />
+                </View>
+                <View style = {{}}>
+                   <UserInput  name="CVC" value={CVC} setValue={setCVC}  />
+                   <UserInput  name="Valid" value={Valid} setValue={setValid}  />
+                   </View>
                    </View>
            </View>
            

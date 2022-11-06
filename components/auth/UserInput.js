@@ -24,6 +24,7 @@ const UserInput = ({ name, value, setValue}) => {
             },
             shadowOpacity: 0.46,
             shadowRadius: 11.14,
+            fontSize:13,
 
             elevation: 17,
 

@@ -1,24 +1,237 @@
-import * as React from 'react';
-import MapView from 'react-native-maps';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import React, { useState, useRef } from "react";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { 
+   StyleSheet,
+   Text,
+   View,
+   Dimensions,
+   TouchableOpacity,
+   } from "react-native";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import Constants from "expo-constants";
+import MapViewDirections from 'react-native-maps-directions';
 
-export default function App() {
+
+const GOOGLE_MAPS_APIKEY = 'AIzaSyDh_Abv9XldolEalAgiu77ZahrozUTT2X4';
+type InputAutocompleteProps = {
+  label: String,
+  placeholder?: String,
+  onPlaceSelected: (details: GooglePlaceDetail | null) => void,
+};
+function InputAutocomplete({
+  label,
+  placeholder,
+  onPlaceSelected,
+}: InputAutocompleteProps) {
   return (
-    <View style={styles.container}>
-      <MapView style={styles.map} />
-    </View>
+    <>
+      <Text>{label}</Text>
+      <GooglePlacesAutocomplete
+        styles={{ textInput: styles.input }}
+        placeholder={placeholder || ""}
+        fetchDetails
+        onPress={(data, details = null) => {
+          onPlaceSelected(details);
+          // 'details' is provided when fetchDetails = true
+          console.log(data, details);
+        }}
+        query={{
+          key: "AIzaSyDh_Abv9XldolEalAgiu77ZahrozUTT2X4",
+          language: "en",
+        }}
+      />
+    </>
   );
 }
 
+export default function Home({navigation}) {
+  const [origin, setOrigin] = useState({ 
+    latitude: null, 
+    longitude: null });
+  const [destination, setDestination] = useState({
+    latitude: null,
+    longitude: null,
+  });
+  const [showDirections,setShowDirections] = useState(false);
+  const [distance,setDistance] = useState(0);
+  const [duration,setDuration] = useState(0);
+  const [show,setShow] = useState(false);
+  
+
+  const mapRef = useRef({ MapView: null });
+
+  const moveTo = async (position: LatLng) => {
+    const camera = await mapRef.current?.getCamera();
+    if (camera) {
+      camera.center = position;
+      mapRef.current?.animateCamera(camera, { duration: 1000 });
+    }
+  };
+  console.log(destination);
+
+  const edgePaddingValue = 70;
+
+  const edgePadding = {
+    top: edgePaddingValue,
+    right: edgePaddingValue,
+    bottom: edgePaddingValue,
+    left: edgePaddingValue,
+  };
+
+  const traceRouteOnReady = (args: any) => {
+    if(args){
+        setDistance(args.distance)
+        setDuration(args.duration)
+    }
+  }
+
+
+  const traceRoute = () => {
+    if(origin && destination){
+      setShowDirections(true)
+      mapRef.current?.fitToCoordinates([origin, destination], {edgePadding});
+     
+
+    }
+  }
+  const onPlaceSelected = (
+    details: GooglePlaceDetail | null,
+    flag: "origin" | "destination"
+  ) => {
+    const set = flag === "origin" ? setOrigin : setDestination;
+    const position = {
+      latitude: details?.geometry.location.lat || 0,
+      longitude: details?.geometry.location.lng || 0,
+    };
+    set(position);
+    moveTo(position);
+  };
+  return (
+    <View style={styles.container}>
+      <MapView
+        style={styles.map}
+        provider={PROVIDER_GOOGLE}
+        ref={mapRef}
+        initialRegion={{
+          latitude: 6.850328,
+          longitude: 79.922721,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+       {origin.latitude && origin.longitude && (
+          <Marker coordinate={origin} />
+        )}
+        {destination.latitude && destination.longitude && (
+          <Marker coordinate={destination} />
+        )}
+       {showDirections && origin && destination && <MapViewDirections
+          origin={origin}
+          destination={destination}
+          apikey={GOOGLE_MAPS_APIKEY}
+          strokeColor = "#6644ff"
+          strokeWidth ={4}
+          onReady ={traceRouteOnReady}
+        />} 
+    
+      </MapView>
+
+      <View style={styles.searchContainer}>
+        <InputAutocomplete
+          label="Pick Up"
+          onPlaceSelected={(details) => {
+            onPlaceSelected(details, "origin");
+          }}
+        />
+        <InputAutocomplete
+          label="Destination"
+          onPlaceSelected={(details) => {
+            onPlaceSelected(details, "destination");
+          }}
+        />
+        <TouchableOpacity
+         style={styles.button} 
+          onPress={() =>{
+            traceRoute();
+            setShow(true);
+            }}
+          >
+          <Text style= {styles.buttonText}>Trace Route</Text>
+        </TouchableOpacity>
+        <View style={styles.statsarea}>
+          <Text style={styles.statsareaText}>Distance: {distance.toFixed(2)}</Text>
+          <Text style={styles.statsareaText}>Duration: {Math.ceil(duration)}</Text>
+          { show? ( <TouchableOpacity
+                    style={styles.buttonshow} 
+                    onPress = { () => navigation.navigate("BusPick",{
+                      distance: distance,
+                      // duration: duration
+                    })}
+                      >
+                      <Text style= {styles.buttonText}>Make Trip</Text>
+                    </TouchableOpacity>) : null
+         }
+        </View>
+      
+      </View>
+    </View>
+  );
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
+  searchContainer: {
+    position: "absolute",
+    width: "90%",
+    backgroundColor: "white",
+    shadowColor: "black",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
+    padding: 8,
+    borderRadius: 8,
+    top: Constants.statusBarHeight,
+  },
+  input: {
+    borderColor: "#888",
+    borderWidth: 1,
+  },
+  button:{
+    backgroundColor: "#260B8C",
+    paddingVertical: 20, 
+    marginTop: 16,
+    borderRadius: 24,
+    marginHorizontal:60,
+  },
+  buttonText:{
+    textAlign: 'center',
+    color: 'white',
+    fontSize:15,
+    fontWeight:"bold"
+
+  },
+  statsarea:{
+    marginTop:20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  statsareaText:{
+    fontSize:18,
+  },
+  buttonshow:{
+    marginTop:20,
+    backgroundColor: "#260B8C",
+    paddingVertical: 20, 
+    borderRadius: 24,
+    paddingHorizontal:20,
+  }
 });
