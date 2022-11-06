@@ -12,7 +12,7 @@ import Constants from "expo-constants";
 import MapViewDirections from 'react-native-maps-directions';
 
 
-const GOOGLE_MAPS_APIKEY = 'AIzaSyDh_Abv9XldolEalAgiu77ZahrozUTT2X4';
+
 type InputAutocompleteProps = {
   label: String,
   placeholder?: String,
@@ -36,7 +36,7 @@ function InputAutocomplete({
           console.log(data, details);
         }}
         query={{
-          key: "AIzaSyDh_Abv9XldolEalAgiu77ZahrozUTT2X4",
+
           language: "en",
         }}
       />
