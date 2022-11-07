@@ -142,7 +142,7 @@ const getData = async () => {
 
             }}  onPress = { () => navigation.navigate("Home")}>
                 <Text bold medium center style = {{ color: 'white',fontSize:20}}>
-                Make a trip
+                Make trip
                 </Text>
             </TouchableOpacity>
                 
