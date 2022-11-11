@@ -42,7 +42,7 @@ useEffect(() => {
 },[Email,type])
 
 const loadData = () =>{
-  axios.get(`http://172.28.11.148:8070/traveller/getTraveller/${type}/${Email}`).then((response)=>{
+  axios.get(`http://192.168.1.23:8070/traveller/getTraveller/${type}/${Email}`).then((response)=>{
     console.log(response.data);
     setName(response.data.Name);
     setPhone(response.data.Phone);
@@ -59,7 +59,7 @@ const getData = async () => {
   try{ 
     const email = await AsyncStorage.getItem('Email')
     const Type = await AsyncStorage.getItem('type')
-    
+   
     if(email!== null)
     setEmail(email);
     if(Type!== null)
@@ -122,7 +122,7 @@ const getData = async () => {
                 marginHorizontal: 100,
                 borderRadius: 24,
 
-            }} >
+            }} onPress = { () => navigation.navigate("EditProfile")}>
                 <Text bold medium center style = {{ color: 'white',fontSize:20}}>
                 Edit
                 </Text>
@@ -142,7 +142,7 @@ const getData = async () => {
 
             }}  onPress = { () => navigation.navigate("Home")}>
                 <Text bold medium center style = {{ color: 'white',fontSize:20}}>
-                Make a trip
+                Make trip
                 </Text>
             </TouchableOpacity>
                 

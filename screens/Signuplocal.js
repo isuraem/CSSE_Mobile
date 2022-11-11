@@ -46,7 +46,7 @@ const Signuplocal = ({navigation}) => {
       });
 
      console.log("Sign In Success => ", data)
-
+     navigation.navigate("Login")
     }catch (err){
     console.log(err)
     } 

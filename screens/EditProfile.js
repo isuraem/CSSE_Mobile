@@ -34,7 +34,7 @@ useEffect(() => {
   },[Email,type])
   
   const loadData = () =>{
-    axios.get(`http://172.28.11.148:8070/traveller/getTraveller/${type}/${Email}`).then((response)=>{
+    axios.get(`http://192.168.1.23:8070/traveller/getTraveller/${type}/${Email}`).then((response)=>{
       console.log(response.data);
       setName(response.data.Name);
       setPhone(response.data.Phone);
@@ -66,14 +66,13 @@ useEffect(() => {
             NIC,
         }
     
-        axios.put(`http://172.28.11.148:8070/traveller/updateTraveller/${type}/${Email}`,updateLocal).then((response)=>{
+        axios.put(`http://192.168.1.23:8070/traveller/updateTraveller/${type}/${Email}`,updateLocal).then((response)=>{
             alert("Local Passenger Details Updated Successfully!");
             navigation.navigate("Profile")
         }).catch((err)=>{
             console.log(err)
             alert("Error occured !");
         });
-    
     }
     const getData = async () =>{
         try{
