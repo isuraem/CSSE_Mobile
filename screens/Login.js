@@ -22,7 +22,9 @@ const Login = ({navigation}) => {
     const [login,setLogin] = useState("");
     const [type,setType] = useState("");
     const [loading, setLoading] = useState(false);
-    
+    // const [TravelId,setTravelId] = useState("");
+    // const [CusName,setCusName] = useState("");
+    // const [Phone,setPhone] = useState("");
     
     const data = [{key:'LocalTraveller',value:'LocalTraveller'},
                   {key:'ForeignTraveller',value:'ForeignTraveller'}  ];
@@ -41,18 +43,23 @@ const Login = ({navigation}) => {
           return;
         }
        
-            axios.get(`http://172.28.11.148:8070/traveller/getUser/${Email}/${Password}/${type}`).then((response)=>{
-                console.log(response.data);
+            axios.get(`http://192.168.1.23:8070/traveller/getUser/${Email}/${Password}/${type}`).then((response)=>{
+                console.log("data",response.data);
                 setLogin(response.data.login);
+                // setTravelId(response.data.login._id);
+                // setCusName(response.data.login.Name);
+                // setPhone(response.data.login.Phone);
+
                 if(response.data.login === null){
                     alert("User not available")
                 }else{
                     alert("Success!");
-                    
                     AsyncStorage.setItem('Email',Email);
                     AsyncStorage.setItem('Password',Password);
                     AsyncStorage.setItem('type',type);
-
+                    // AsyncStorage.setItem('TravelId',TravelId);
+                    // AsyncStorage.setItem('CusName',CusName);
+                    // AsyncStorage.setItem('Phone',Phone);
                     navigation.navigate("Profile")
                 }
     

@@ -33,10 +33,10 @@ function InputAutocomplete({
         onPress={(data, details = null) => {
           onPlaceSelected(details);
           // 'details' is provided when fetchDetails = true
-          console.log(data, details);
+          console.log(details.vicinity);
         }}
         query={{
-         
+          
           language: "en",
         }}
       />
@@ -56,7 +56,12 @@ export default function Home({navigation}) {
   const [distance,setDistance] = useState(0);
   const [duration,setDuration] = useState(0);
   const [show,setShow] = useState(false);
-  
+  const [pick,setPick] = useState({ 
+    vicinity: null
+  });
+  const [drop,setDrop] = useState({ 
+    vicinity: null
+  });
 
   const mapRef = useRef({ MapView: null });
 
@@ -67,7 +72,7 @@ export default function Home({navigation}) {
       mapRef.current?.animateCamera(camera, { duration: 1000 });
     }
   };
-  console.log(destination);
+
 
   const edgePaddingValue = 70;
 
@@ -99,12 +104,19 @@ export default function Home({navigation}) {
     flag: "origin" | "destination"
   ) => {
     const set = flag === "origin" ? setOrigin : setDestination;
+    const setLoc = flag === "origin" ? setPick : setDrop;
     const position = {
       latitude: details?.geometry.location.lat || 0,
       longitude: details?.geometry.location.lng || 0,
     };
+    const positionloc = {
+      vicinity: details?.vicinity || null,
+    };
     set(position);
+    setLoc(positionloc);
     moveTo(position);
+    console.log(pick.vicinity)
+
   };
   return (
     <View style={styles.container}>
@@ -165,7 +177,9 @@ export default function Home({navigation}) {
                     style={styles.buttonshow} 
                     onPress = { () => navigation.navigate("BusPick",{
                       distance: distance,
-                      // duration: duration
+                      pick: pick,
+                      drop:drop,
+
                     })}
                       >
                       <Text style= {styles.buttonText}>Make Trip</Text>

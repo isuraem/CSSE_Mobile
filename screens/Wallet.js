@@ -43,7 +43,7 @@ const Login = ({navigation}) => {
           return;
         }
        
-            axios.get(`http://172.28.11.148:8070/traveller/getUser/${Email}/${Password}/${type}`).then((response)=>{
+            axios.get(`http://192.168.1.23:8070/traveller/getUser/${Email}/${Password}/${type}`).then((response)=>{
                 console.log(response.data);
                 setLogin(response.data.login);
                 if(response.data.login === null){
