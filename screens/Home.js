@@ -36,7 +36,6 @@ function InputAutocomplete({
           console.log(details.vicinity);
         }}
         query={{
-          
           language: "en",
         }}
       />
