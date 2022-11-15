@@ -22,7 +22,7 @@ import axios from 'axios';
 
 
 export default function BusPick({navigation}){
-
+//set variables
     const [Email, setEmail] = useState("");
     const [Name, setName] = useState("");
     const [Password, setPassword] = useState("");
@@ -30,12 +30,14 @@ export default function BusPick({navigation}){
     const [NIC, setNIC] = useState("");
     const [Phone, setPhone] = useState("");
     const [type, setType] = useState("");
-
+    const [Amount,setAmount] = useState("");
+//logout function
 const logout = () => {
   AsyncStorage.clear()
   navigation.navigate("Login")
   
 }
+//fetch data when page refresh
 useEffect(() => {
   getData();
   loadData();
@@ -49,6 +51,8 @@ const loadData = () =>{
     setAddress(response.data.Address);
     setNIC(response.data.NIC);
     setEmail(response.data.Email);
+    setAmount(response.data.Amount);
+
     console.log(Address);
 
   })
@@ -106,7 +110,7 @@ const getData = async () => {
           </View>
           <View style={styles.infoBoxWrapper}>
             <View style={styles.infoBox}>
-              <Title>$150</Title>
+              <Title>{Amount}</Title>
               <Caption>Wallet</Caption>
             </View>
 

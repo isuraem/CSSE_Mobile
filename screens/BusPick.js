@@ -12,9 +12,9 @@ import Constants from "expo-constants";
 import BusServiceDetails from './BusServiceDetails';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function BusPick({route}) {
+export default function BusPick({route,navigation}) {
 
-
+    //create variables
     const [busList, setBusList] =useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -26,7 +26,7 @@ export default function BusPick({route}) {
     const [pick, setPick] = useState(null);
     const [drop, setDrop] = useState(null);
     const [dataobj,setdDataobj] = useState({});
- 
+ //set values when refresh page
     const onRefresh = React.useCallback(() => {
 
         setRefreshing(true);
@@ -41,7 +41,7 @@ export default function BusPick({route}) {
         })
 
     }, []);
-
+// get data form the http request
     useEffect(() => {
         setData();
         axios.get(`http://192.168.1.23:8070/busService/allBusServices`).then((res) => {            
@@ -51,7 +51,7 @@ export default function BusPick({route}) {
 
         })
     }, [])
-
+// set moving data 
     const setData = () =>{
         try{
             const duration =  route.params.distance;
@@ -84,10 +84,11 @@ export default function BusPick({route}) {
 
      
         } catch(e){
+            console.log(e);
 
         }
      }  
-
+    
     const list = () => {
         return busList.map((element) => {
             return (
@@ -146,7 +147,23 @@ export default function BusPick({route}) {
                 <Text style={styles.header}>
                                 Bus Service Details
                             </Text>
+                            
                     <View>{list()}</View>
+                            <TouchableOpacity
+                                style = {{
+                                    backgroundColor: "#260B8C",
+                                    height: 30,
+                                    marginBottom:20,
+                                    justifyContent: "center",
+                                    alignItems:"center",
+                                    marginHorizontal: 100,
+                                    borderRadius: 24,
+
+                                }} onPress={ () => navigation.navigate("Profile")}>
+                                    <Text bold medium center style = {{ color: 'white',fontSize:18,}}>
+                                    Back To Profile
+                                    </Text>
+                            </TouchableOpacity>
 
                 </View>
 
@@ -287,6 +304,20 @@ const styles = StyleSheet.create({
     list3 :{
         marginTop : 5,
     },
+    buttonshow:{
+        marginTop:20,
+        backgroundColor: "#260B8C",
+        paddingVertical: 20, 
+        borderRadius: 24,
+        paddingHorizontal:20,
+      },
+      buttonText:{
+        textAlign: 'center',
+        color: 'white',
+        fontSize:15,
+        fontWeight:"bold"
+    
+      },
 })
 
 // export default BusPick;

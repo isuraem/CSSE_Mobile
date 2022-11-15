@@ -23,7 +23,7 @@ import axios from 'axios';
 
 
 function BusServiceDetails(props) {
-
+  //setting props valuse into usestate 
     const [duration, setDuration] = useState(props.locationData.duration);
     const [PickUp, setPick] = useState(props.locationData.pick.vicinity);
     const [Destination, setDrop] = useState(props.locationData.drop.vicinity);
@@ -43,14 +43,14 @@ function BusServiceDetails(props) {
     const [type, setType ] = useState("");
     const [TPrice,setTPrice] = useState("");
 
-
+//set use effect to fetch details 
     useEffect(() => {
         loadData();
         getData();
         cal();
        
     },[Email,type])
- 
+ //http request for get traveller details 
     const loadData = () =>{
         axios.get(`http://192.168.1.23:8070/traveller/getTraveller/${type}/${Email}`).then((response)=>{
         
@@ -66,7 +66,7 @@ function BusServiceDetails(props) {
       
       const sendData = async() =>{
        
-      
+   //http req for ading booking details   
         axios.post("http://192.168.1.23:8070/booking/addBooking",{
             CusName,
             Mobile,
@@ -78,11 +78,12 @@ function BusServiceDetails(props) {
       }).then((res) => {            
         ToastAndroid.show(
 
-          'Fuel Station Successfully Updated..', ToastAndroid.SHORT
+          'Booking Added..', ToastAndroid.SHORT
         );
 
       props.onHide(true);
       props.refresh();
+      props.show(true);
         }).catch((err)=>{
             console.log(err)
         });
@@ -94,7 +95,7 @@ function BusServiceDetails(props) {
             props.refresh();
            
                   }
-   
+   //getdata function for fetch asyncstorage values
  const getData = async () => {
     try{ 
       const email = await AsyncStorage.getItem('Email')
@@ -110,6 +111,7 @@ function BusServiceDetails(props) {
     }
     }catch(e){}
   }
+  //set trip total prices
   const cal = async () => {
     try{ 
       let TripPrice = duration * Price;

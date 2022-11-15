@@ -36,6 +36,7 @@ function InputAutocomplete({
           console.log(details.vicinity);
         }}
         query={{
+    
           language: "en",
         }}
       />
@@ -44,6 +45,7 @@ function InputAutocomplete({
 }
 
 export default function Home({navigation}) {
+  // set locations values and direction
   const [origin, setOrigin] = useState({ 
     latitude: null, 
     longitude: null });
@@ -63,7 +65,7 @@ export default function Home({navigation}) {
   });
 
   const mapRef = useRef({ MapView: null });
-
+// set position with map marker
   const moveTo = async (position: LatLng) => {
     const camera = await mapRef.current?.getCamera();
     if (camera) {
@@ -81,7 +83,7 @@ export default function Home({navigation}) {
     bottom: edgePaddingValue,
     left: edgePaddingValue,
   };
-
+//Trace route read
   const traceRouteOnReady = (args: any) => {
     if(args){
         setDistance(args.distance)
@@ -98,6 +100,7 @@ export default function Home({navigation}) {
 
     }
   }
+  // get details from the google api
   const onPlaceSelected = (
     details: GooglePlaceDetail | null,
     flag: "origin" | "destination"
@@ -170,8 +173,8 @@ export default function Home({navigation}) {
           <Text style= {styles.buttonText}>Trace Route</Text>
         </TouchableOpacity>
         <View style={styles.statsarea}>
-          <Text style={styles.statsareaText}>Distance: {distance.toFixed(2)}</Text>
-          <Text style={styles.statsareaText}>Duration: {Math.ceil(duration)}</Text>
+          <Text style={styles.statsareaText}>Distance: {distance.toFixed(2)} Km</Text>
+          <Text style={styles.statsareaText}>Duration: {Math.ceil(duration)} min</Text>
           { show? ( <TouchableOpacity
                     style={styles.buttonshow} 
                     onPress = { () => navigation.navigate("BusPick",{
