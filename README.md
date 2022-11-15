@@ -1,6 +1,6 @@
 <!-- Title -->
 <h1 align="center">
-  Create React Native App
+  React Native App
 </h1>
 
 <!-- Header -->
